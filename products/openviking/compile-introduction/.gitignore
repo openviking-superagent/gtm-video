@@ -1,0 +1,8 @@
+# Finished videos and renders stay out of the repo.
+*.mp4
+/project/renders/
+# Noto Sans SC (17 MB): download, see README.
+/project/assets/fonts/
+.hyperframes/
+node_modules/
+__pycache__/

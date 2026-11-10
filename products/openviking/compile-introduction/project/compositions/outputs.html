@@ -1,0 +1,602 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Noto Sans SC";
+      src: url("assets/fonts/NotoSansSC.ttf") format("truetype");
+      font-weight: 100 900;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Inter", "Noto Sans SC", sans-serif;
+      color: #1f2329;
+    }
+    #root * {
+      box-sizing: border-box;
+    }
+    .oi {
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      flex: none;
+    }
+    .oi svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .omono {
+      font-family: "JetBrains Mono", "Noto Sans SC", monospace;
+    }
+    #o-heads {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 96px;
+      display: grid;
+      justify-items: center;
+    }
+    .o-h {
+      grid-area: 1 / 1;
+      font-size: 58px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .o-h span {
+      display: inline-block;
+    }
+    .o-h em {
+      font-style: normal;
+      background: linear-gradient(90deg, #FF8A3D, #FF4D4D);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    #o-dia {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+    }
+    .ocard {
+      position: absolute;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow:
+        0 24px 60px rgba(30, 40, 90, 0.12),
+        0 0 0 1px rgba(20, 30, 60, 0.05);
+    }
+    #o-ctx {
+      left: 140px;
+      top: 300px;
+      width: 450px;
+      height: 420px;
+      padding: 26px 26px;
+    }
+    .ov-lockup {
+      height: 30px;
+      width: auto;
+      display: block;
+    }
+    .octx-h {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 25px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .orow {
+      position: relative;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      font-size: 22px;
+    }
+    .orow .ohl {
+      position: absolute;
+      inset: 3px 0;
+      border-radius: 12px;
+      background: #fff1ea;
+      border: 1.5px solid #ffd3c2;
+      opacity: 0;
+    }
+    .orow > *:not(.ohl) {
+      position: relative;
+    }
+    .orow .oi {
+      color: #4b5260;
+    }
+    .orow .cnt {
+      margin-left: auto;
+      font-size: 17px;
+      color: #828893;
+    }
+    .oarrow {
+      position: absolute;
+      height: 4px;
+      border-radius: 2px;
+      background: #dde2f0;
+    }
+    .oarrow .head {
+      position: absolute;
+      right: -4px;
+      top: -8px;
+      width: 0;
+      height: 0;
+      border-left: 14px solid #c3cbe4;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+    .odot {
+      position: absolute;
+      left: 0;
+      top: -4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff6b4a;
+    }
+    #o-a1 {
+      left: 606px;
+      top: 508px;
+      width: 150px;
+    }
+    #o-a2 {
+      left: 1130px;
+      top: 508px;
+      width: 120px;
+    }
+    #o-node {
+      left: 770px;
+      top: 404px;
+      width: 344px;
+      height: 212px;
+      background: linear-gradient(130deg, #FFB347, #FF6B4A 55%, #E8453C);
+      color: #fff;
+      padding: 28px 30px;
+      box-shadow: 0 26px 60px rgba(232, 69, 60, 0.28);
+    }
+    .onode-t {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 38px;
+      font-weight: 700;
+    }
+    .onode-t .oi {
+      width: 36px;
+      height: 36px;
+    }
+    .onode-t .oi svg {
+      stroke-width: 2.2;
+    }
+    .oskill {
+      margin-top: 22px;
+      height: 64px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      font-size: 18px;
+    }
+    .oskill .lab {
+      opacity: 0.8;
+    }
+    .oslot {
+      position: relative;
+      height: 40px;
+      flex: 1;
+      overflow: hidden;
+    }
+    #o-strip {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    #o-strip div {
+      height: 40px;
+      line-height: 40px;
+      font-size: 24px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    #o-out {
+      left: 1268px;
+      top: 270px;
+      width: 520px;
+      height: 480px;
+    }
+    .ov {
+      position: absolute;
+      inset: 0;
+      padding: 28px 32px;
+    }
+    .ov-h {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 27px;
+      font-weight: 700;
+    }
+    .ov-h .oi {
+      width: 30px;
+      height: 30px;
+    }
+    .ov-p {
+      font-size: 15px;
+      color: #737985;
+      margin-top: 8px;
+    }
+    .ov-b {
+      margin-top: 16px;
+      border-top: 1px solid #eef0f4;
+      padding-top: 12px;
+    }
+    .ov-r {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 21px;
+      white-space: nowrap;
+    }
+    .ov-r .oi {
+      color: #4b5260;
+    }
+    .omd {
+      font-weight: 800;
+      font-size: 14px;
+      color: #16a34a;
+      width: 28px;
+    }
+    .ol1 {
+      padding-left: 32px;
+    }
+    .ov-sec {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 8px 0 2px;
+      color: #374151;
+    }
+    .ov-li {
+      font-size: 20px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      color: #2b3038;
+    }
+    .ov-li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff6b4a;
+      flex: none;
+    }
+    .ov-li b {
+      font-weight: 600;
+    }
+    .ov-li .n {
+      margin-left: auto;
+      color: #737985;
+      font-size: 17px;
+    }
+    .ov-src {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #737985;
+    }
+    .c-wiki {
+      color: #e8453c;
+    }
+    .c-rep {
+      color: #d9690b;
+    }
+    .c-team {
+      color: #0e7490;
+    }
+    /* features */
+    .ofeat {
+      position: absolute;
+      top: 636px;
+      width: 500px;
+      height: 300px;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow:
+        0 24px 60px rgba(30, 40, 90, 0.1),
+        0 0 0 1px rgba(20, 30, 60, 0.05);
+      padding: 30px 32px;
+    }
+    #o-f1 {
+      left: 170px;
+    }
+    #o-f2 {
+      left: 710px;
+    }
+    #o-f3 {
+      left: 1250px;
+    }
+    .of-ic {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(130deg, #FFB347, #FF6B4A 55%, #E8453C);
+      color: #fff;
+    }
+    .of-ic .oi {
+      width: 30px;
+      height: 30px;
+    }
+    .of-t {
+      font-size: 32px;
+      font-weight: 700;
+      margin-top: 18px;
+    }
+    .of-d {
+      font-size: 19px;
+      color: #6b7280;
+      margin-top: 8px;
+      white-space: nowrap;
+    }
+    .of-m {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: 28px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+    }
+    .pillg {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 10px;
+      background: #f2f4fa;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .pillg.on {
+      background: #ffede6;
+      color: #d9480f;
+      font-weight: 600;
+    }
+    .dotg {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    .obar {
+      flex: 1;
+      height: 10px;
+      border-radius: 5px;
+      background: #eef0f5;
+      overflow: hidden;
+    }
+    .obar > div {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #FF8A3D, #FF4D4D);
+      transform-origin: 0 50%;
+    }
+    #o-hand {
+      transform-origin: 12px 12px;
+    }
+  </style>
+
+  <div id="root" data-composition-id="outputs" data-width="1920" data-height="1080">
+    <div id="o-heads">
+      <div class="o-h" id="o-h1"><span>换个 Skill，</span><span>就换一种<em>产物</em></span></div>
+      <div class="o-h" id="o-h2"><span>持续编译，</span><span>知识<em>始终最新</em></span></div>
+    </div>
+
+    <div id="o-dia">
+      <div class="ocard" id="o-ctx">
+        <div class="octx-h">
+          <img class="ov-lockup" src="assets/brand/brand-lockup-light.svg" alt="OpenViking" />上下文
+        </div>
+        <div class="orow" id="o-r1"><div class="ohl"></div><i class="oi" data-i="folder"></i><span>产品文档</span><span class="cnt">36</span></div>
+        <div class="orow" id="o-r2"><div class="ohl"></div><i class="oi" data-i="folder"></i><span>会议纪要</span><span class="cnt">52</span></div>
+        <div class="orow" id="o-r3"><div class="ohl"></div><i class="oi" data-i="folder"></i><span>客服工单</span><span class="cnt">40</span></div>
+        <div class="orow" id="o-r4"><div class="ohl"></div><i class="oi" data-i="folder"></i><span>团队经验</span><span class="cnt">18</span></div>
+        <div class="orow" id="o-r5"><div class="ohl"></div><i class="oi" data-i="chat"></i><span>会话记录</span><span class="cnt">210</span></div>
+      </div>
+
+      <div class="oarrow" id="o-a1"><div class="head"></div><div class="odot"></div><div class="odot"></div><div class="odot"></div></div>
+      <div class="oarrow" id="o-a2"><div class="head"></div><div class="odot"></div><div class="odot"></div><div class="odot"></div></div>
+
+      <div class="ocard" id="o-node">
+        <div class="onode-t"><i class="oi" data-i="compile"></i>Compile</div>
+        <div class="oskill">
+          <span class="lab">Skill</span>
+          <div class="oslot">
+            <div id="o-strip"><div>LLM Wiki</div><div>日报总结</div><div>团队经验总结</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ocard" id="o-out">
+        <div class="ov" id="o-v1">
+          <div class="ov-h c-wiki"><i class="oi" data-i="book"></i><span style="color: #1f2329">产品知识 Wiki</span></div>
+          <div class="ov-p omono">resources/产品知识 Wiki/</div>
+          <div class="ov-b">
+            <div class="ov-r"><span class="omd">M↓</span>index.md</div>
+            <div class="ov-r"><i class="oi" data-i="folder"></i>concept</div>
+            <div class="ov-r ol1"><span class="omd">M↓</span>退款政策.md</div>
+            <div class="ov-r ol1"><span class="omd">M↓</span>企业版席位与定价.md</div>
+            <div class="ov-r"><i class="oi" data-i="folder"></i>entity</div>
+            <div class="ov-r ol1"><span class="omd">M↓</span>智能客服助手.md</div>
+            <div class="ov-r ol1"><span class="omd">M↓</span>星海 CRM.md</div>
+          </div>
+        </div>
+        <div class="ov" id="o-v2">
+          <div class="ov-h c-rep"><i class="oi" data-i="report"></i><span style="color: #1f2329">日报 · 2026-11-09</span></div>
+          <div class="ov-p omono">resources/日报/2026-11-09.md</div>
+          <div class="ov-b">
+            <div class="ov-sec">今日进展</div>
+            <div class="ov-li">智能客服助手灰度方案评审通过</div>
+            <div class="ov-li">退款时效统一为 7 天，FAQ 已更新</div>
+            <div class="ov-li">新增客服工单 23 条，3 条待跟进</div>
+            <div class="ov-sec">明日计划</div>
+            <div class="ov-li">评审开放 API 限流方案</div>
+            <div class="ov-src">来源：会话记录 · 会议纪要 · 客服工单</div>
+          </div>
+        </div>
+        <div class="ov" id="o-v3">
+          <div class="ov-h c-team"><i class="oi" data-i="users"></i><span style="color: #1f2329">客服团队经验总结</span></div>
+          <div class="ov-p omono">resources/团队经验/客服-11月.md</div>
+          <div class="ov-b">
+            <div class="ov-sec">高频问题</div>
+            <div class="ov-li"><b>退款时效咨询</b><span class="n">38 次</span></div>
+            <div class="ov-li"><b>企业版席位扩容</b><span class="n">21 次</span></div>
+            <div class="ov-li"><b>数据导出</b><span class="n">12 次</span></div>
+            <div class="ov-sec">可复用经验</div>
+            <div class="ov-li">先核对下单时间，再按 7 天政策答复</div>
+            <div class="ov-src">来源：客服工单 · 团队经验 · 会话记录</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ofeat" id="o-f1">
+      <div class="of-ic">
+        <svg class="oi" viewBox="0 0 24 24" style="width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round">
+          <circle cx="12" cy="12" r="9" />
+          <g id="o-hand"><path d="M12 12V6.5" /></g>
+          <path d="M12 12l3.5 2" />
+        </svg>
+      </div>
+      <div class="of-t">定时更新</div>
+      <div class="of-d">按计划自动运行，资料变了 Wiki 跟着变</div>
+      <div class="of-m">
+        <span class="pillg on"><span class="dotg"></span>每天 09:00</span>
+        <span class="pillg">下次运行 · 11-10 09:00</span>
+      </div>
+    </div>
+    <div class="ofeat" id="o-f2">
+      <div class="of-ic"><i class="oi" data-i="bolt"></i></div>
+      <div class="of-t">增量编译</div>
+      <div class="of-d">只处理新增和变更的资料，省时省 token</div>
+      <div class="of-m">
+        <span class="pillg" id="o-new">+3 个新文件</span>
+        <div class="obar"><div id="o-bar"></div></div>
+        <span style="white-space: nowrap; color: #374151">更新 5 / 42 页</span>
+      </div>
+    </div>
+    <div class="ofeat" id="o-f3">
+      <div class="of-ic"><i class="oi" data-i="layers"></i></div>
+      <div class="of-t">版本管理</div>
+      <div class="of-d">每次编译生成新版本，可对比、可回滚</div>
+      <div class="of-m">
+        <span class="pillg ov3">v10</span>
+        <span class="pillg ov3">v11</span>
+        <span class="pillg on ov3">v12 · 当前</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ICONS = {
+        folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+        chat: '<path d="M4 5h16v11H9l-5 4z"/>',
+        book: '<path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13"/>',
+        report: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+        users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2A5 5 0 0 1 21 19"/>',
+        compile: '<path d="M4 6h7M4 12h5M4 18h7"/><path d="M14 8l4 4-4 4"/><path d="M20 4v16"/>',
+        bolt: '<path d="M13 2.5L4.5 14h6.5l-1 7.5L18.5 10H12z"/>',
+        layers: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+      };
+      document.querySelectorAll('[data-composition-id="outputs"] .oi[data-i]').forEach((el) => {
+        el.innerHTML = '<svg viewBox="0 0 24 24">' + (ICONS[el.dataset.i] || "") + "</svg>";
+      });
+      const R = document.querySelector('[data-composition-id="outputs"]');
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      const tl = gsap.timeline({ paused: true });
+
+      gsap.set(["#o-h2"], { opacity: 0 });
+      gsap.set(["#o-v2", "#o-v3"], { opacity: 0 });
+      gsap.set(".ofeat", { opacity: 0, y: 40 });
+      gsap.set("#o-bar", { scaleX: 0 });
+      gsap.set(".ov3", { opacity: 0, x: -10 });
+      gsap.set("#o-dia", { y: 44 });
+
+      // arrive: the workspace becomes the context card
+      tl.fromTo("#o-ctx", { opacity: 0, x: -140, scale: 1.12, filter: "blur(8px)" }, { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.3);
+      tl.fromTo("#o-h1 span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power3.out", stagger: 0.2 }, 0.55);
+      tl.fromTo("#o-a1", { opacity: 0, scaleX: 0, transformOrigin: "0 50%" }, { opacity: 1, scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.7);
+      tl.fromTo("#o-node", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease: "expo.out" }, 0.85);
+      tl.fromTo("#o-a2", { opacity: 0, scaleX: 0, transformOrigin: "0 50%" }, { opacity: 1, scaleX: 1, duration: 0.4, ease: "power3.out" }, 1.05);
+      tl.fromTo("#o-out", { opacity: 0, x: 40, filter: "blur(8px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 1.15);
+
+      // flowing dots along both arrows (finite repeats)
+      [["#o-a1", 150], ["#o-a2", 120]].forEach(([a, w], j) => {
+        $$(a + " .odot").forEach((d, i) => {
+          tl.fromTo(d, { x: -6, opacity: 0 }, { x: w - 6, opacity: 1, duration: 0.9, ease: "power1.in", repeat: 13, delay: 0 }, 1.2 + j * 0.3 + i * 0.3);
+        });
+      });
+
+      // source highlights per skill
+      const hl = (ids, at) => {
+        $$(".ohl").forEach((el) => tl.to(el, { opacity: 0, duration: 0.2 }, at));
+        ids.forEach((id) => tl.to("#o-r" + id + " .ohl", { opacity: 1, duration: 0.25 }, at + 0.05));
+      };
+      hl([1, 2, 3], 1.3);
+
+      // skill rolls: Wiki -> 日报 -> 团队经验
+      const roll = (to, at) => tl.to("#o-strip", { y: -40 * to, duration: 0.35, ease: "power3.inOut" }, at);
+      const vswap = (a, b, at) => {
+        tl.to(a, { opacity: 0, filter: "blur(8px)", x: -20, duration: 0.2, ease: "power2.in" }, at);
+        tl.fromTo(b, { opacity: 0, filter: "blur(8px)", x: 24 }, { opacity: 1, filter: "blur(0px)", x: 0, duration: 0.35, ease: "expo.out" }, at + 0.18);
+      };
+      roll(1, 3.6);
+      hl([5, 2, 3], 3.6);
+      vswap("#o-v1", "#o-v2", 3.7);
+      roll(2, 4.6);
+      hl([3, 4, 5], 4.6);
+      vswap("#o-v2", "#o-v3", 4.7);
+
+      // phase 2: always up to date
+      tl.to("#o-h1 span", { opacity: 0, filter: "blur(8px)", duration: 0.18, ease: "power2.in", stagger: 0.05 }, 6.85);
+      tl.fromTo("#o-h2 span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power3.out", stagger: 0.2 }, 7.1);
+      tl.set("#o-h2", { opacity: 1 }, 7.1);
+      tl.to("#o-dia", { scale: 0.66, y: 34, duration: 0.8, ease: "power3.inOut", transformOrigin: "50% 0%" }, 6.9);
+      // each feature lands on its word in the narration
+      tl.to("#o-f1", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 9.35);
+      tl.to("#o-f2", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 10.2);
+      tl.to("#o-f3", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 11.1);
+      // mini actions inside each feature
+      tl.fromTo("#o-hand", { rotation: 0 }, { rotation: 720, duration: 3.8, ease: "power1.inOut" }, 9.45);
+      tl.fromTo("#o-new", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "expo.out" }, 10.4);
+      tl.to("#o-bar", { scaleX: 5 / 42, duration: 0.6, ease: "power2.out" }, 10.7);
+      tl.to(".ov3", { opacity: 1, x: 0, duration: 0.35, ease: "expo.out", stagger: 0.25 }, 11.3);
+
+      // exit into the end card
+      tl.to(["#o-heads", "#o-dia", ".ofeat"], { opacity: 0, filter: "blur(8px)", duration: 0.35, ease: "power2.in" }, 13.5);
+      window.__timelines["outputs"] = tl;
+    })();
+  </script>
+</template>

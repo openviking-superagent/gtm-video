@@ -1,0 +1,16 @@
+[
+ ["n01","Your docs keep piling up. Your knowledge keeps scattering."],
+ ["n02","OpenViking Compile turns scattered context into structured knowledge."],
+ ["n03","All your data lives in OpenViking's context tree."],
+ ["n04","Choose Wiki, and describe what you need in one line."],
+ ["n05","Then pick the source folders from the context tree."],
+ ["n06","Compile reads, extracts, and merges in the background,"],
+ ["n07","then writes the results back to the context tree."],
+ ["n08","Scattered files become an interlinked Wiki."],
+ ["n09","It also catches conflicts across sources, automatically."],
+ ["n10","Review them on the Kanban board, and the fix is written back to the Wiki."],
+ ["n11","Where the conflicts are, and why: it's all clear on the board."],
+ ["n12","Switch the Skill, and you get a different output: a knowledge Wiki, a daily report, or a team playbook."],
+ ["n13","Compile runs continuously, so knowledge stays fresh: scheduled updates, incremental builds, version control."],
+ ["n14","OpenViking Compile. Turn any context into the knowledge you need."]
+]

@@ -1,0 +1,2148 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Noto Sans SC";
+      src: url("assets/fonts/NotoSansSC.ttf") format("truetype");
+      font-weight: 100 900;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Inter", "Noto Sans SC", sans-serif;
+      color: #1f2329;
+    }
+    #root * {
+      box-sizing: border-box;
+    }
+    .ic {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .ic svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .mono {
+      font-family: "JetBrains Mono", "Noto Sans SC", monospace;
+    }
+    .md {
+      font-family: "Inter", sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      color: #16a34a;
+      width: 26px;
+      flex: none;
+      letter-spacing: -0.5px;
+    }
+    #c-cam {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+    }
+    #c-win {
+      position: absolute;
+      left: 48px;
+      top: 40px;
+      width: 1824px;
+      height: 1000px;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 30px 80px rgba(30, 40, 90, 0.16),
+        0 0 0 1px rgba(20, 30, 60, 0.07);
+    }
+    /* top bars */
+    .topbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 24px;
+      border-bottom: 2px solid #3d6bff;
+    }
+    .ov-lockup {
+      height: 34px;
+      width: auto;
+      display: block;
+      margin-left: 4px;
+    }
+    .brand {
+      margin-left: -6px;
+      font-size: 25px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: #1f2329;
+    }
+    .sep-v {
+      width: 1px;
+      height: 24px;
+      background: #dfe2e8;
+    }
+    .gsearch {
+      margin-left: auto;
+      width: 300px;
+      height: 40px;
+      border-radius: 10px;
+      background: #f4f5f8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      color: #737985;
+      font-size: 16px;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFB347, #FF6B4A);
+    }
+    .subbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 62px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+      font-size: 18px;
+      color: #1f2329;
+    }
+    .orgdot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffd0d6, #ff7a8f);
+    }
+    .tag {
+      font-size: 13px;
+      color: #6b7280;
+      background: #f2f3f5;
+      border-radius: 5px;
+      padding: 2px 7px;
+    }
+    .gray {
+      color: #737985;
+    }
+    .subright {
+      margin-left: auto;
+      display: flex;
+      gap: 26px;
+      align-items: center;
+      color: #4b5260;
+    }
+    .body {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 114px;
+      bottom: 0;
+      background: #f5f6fa;
+      padding: 14px;
+      display: flex;
+      gap: 14px;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #eceef3;
+      position: relative;
+      overflow: hidden;
+    }
+    /* left */
+    .left {
+      width: 410px;
+      padding: 12px;
+    }
+    .lbtns {
+      height: 50px;
+      border-radius: 10px;
+      background: #eef2fd;
+      display: flex;
+      align-items: center;
+      color: #3d5afe;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .lbtns > div {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .lbtns .sep-v {
+      flex: none;
+      background: #c9d3fb;
+    }
+    .lsearch {
+      margin-top: 10px;
+      height: 44px;
+      display: flex;
+      gap: 10px;
+    }
+    .lsearch .box {
+      flex: 1;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      color: #828893;
+      font-size: 16px;
+    }
+    .lsearch .btn {
+      width: 44px;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4b5260;
+    }
+    .tree {
+      margin-top: 10px;
+      position: relative;
+    }
+    .row {
+      position: relative;
+      height: 39px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 18px;
+      white-space: nowrap;
+      color: #1f2329;
+    }
+    .row .sel {
+      position: absolute;
+      inset: 2px 0;
+      border-radius: 8px;
+      background: #eef1fb;
+      opacity: 0;
+    }
+    .row > *:not(.sel) {
+      position: relative;
+    }
+    .row .chev {
+      width: 16px;
+      height: 16px;
+      color: #828893;
+    }
+    .row .chev.none {
+      visibility: hidden;
+    }
+    .row .fi {
+      color: #4b5260;
+    }
+    .row .desc {
+      font-size: 14px;
+      color: #828893;
+      margin-left: 4px;
+    }
+    .row .badge-new {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e8453c;
+      background: #ffede6;
+      border-radius: 6px;
+      padding: 2px 7px;
+      margin-left: 6px;
+    }
+    .row .warn {
+      position: absolute;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      color: #dc6a0c;
+      opacity: 0;
+    }
+    .d0 {
+      padding-left: 6px;
+    }
+    .d1 {
+      padding-left: 30px;
+    }
+    .d2 {
+      padding-left: 54px;
+    }
+    .d3 {
+      padding-left: 78px;
+    }
+    .book {
+      color: #ff6b4a !important;
+    }
+    /* center */
+    .center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .ctabs {
+      height: 50px;
+      flex: none;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding: 0 14px;
+      border-bottom: 1px solid #eceef3;
+      background: #fbfbfd;
+    }
+    .tab {
+      position: relative;
+      height: 42px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      color: #6b7280;
+    }
+    .tab .on {
+      position: absolute;
+      inset: 0 0 -1px 0;
+      background: #fff;
+      border: 1px solid #eceef3;
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      opacity: 0;
+    }
+    .tab > *:not(.on) {
+      position: relative;
+    }
+    .tab .lbl-stack {
+      display: grid;
+    }
+    .tab .lbl-stack > span {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f2329;
+      font-weight: 500;
+    }
+    .cbody {
+      position: relative;
+      flex: 1;
+    }
+    .layer {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+    }
+    .pathbar {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 22px;
+      border-bottom: 1px solid #f0f1f4;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    .pathbar .p {
+      color: #737985;
+    }
+    .pathbar .f {
+      color: #1f2329;
+      font-weight: 600;
+      font-family: "Inter", "Noto Sans SC", sans-serif;
+    }
+    .pathbar .tools {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #4b5260;
+    }
+    .seg {
+      display: flex;
+      background: #f2f3f6;
+      border-radius: 9px;
+      padding: 3px;
+      font-size: 16px;
+    }
+    .seg span {
+      padding: 4px 14px;
+      border-radius: 7px;
+      color: #737985;
+    }
+    .seg span.a {
+      background: #fff;
+      color: #1f2329;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+    .tbtn {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid #eceef3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tbtn .ic {
+      width: 18px;
+      height: 18px;
+    }
+    .ebtn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 9px;
+      border: 1px solid #eceef3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      color: #1f2329;
+    }
+    .lines {
+      padding: 16px 24px;
+    }
+    .ln {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    .ln .n {
+      width: 40px;
+      color: #b0b5be;
+      font-size: 15px;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .ln.h {
+      font-weight: 700;
+    }
+    .cfoot {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 15px;
+      color: #737985;
+      border-top: 1px solid #f0f1f4;
+      background: #fff;
+    }
+    /* index layer */
+    .idx {
+      padding: 18px 28px;
+    }
+    .yaml {
+      border: 1px solid #eceef3;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .yaml .yh {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      background: #f6f7f9;
+      font-size: 15px;
+      color: #4b5260;
+      border-bottom: 1px solid #eceef3;
+    }
+    .yaml .yb {
+      padding: 10px 18px;
+      font-size: 16px;
+      line-height: 30px;
+      white-space: nowrap;
+    }
+    .yk {
+      color: #2f55d4;
+    }
+    .idx h2 {
+      font-size: 24px;
+      margin: 18px 0 8px;
+    }
+    .idx p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: #2b3038;
+    }
+    .idx h3 {
+      font-size: 20px;
+      margin: 14px 0 4px;
+    }
+    .idx ul {
+      list-style: none;
+      font-size: 17px;
+    }
+    .idx li {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      color: #2b3038;
+    }
+    .idx li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2b3038;
+      margin-right: 8px;
+    }
+    .lk {
+      color: #3d5afe;
+    }
+    .tp {
+      font-size: 12px;
+      color: #e8453c;
+      background: #ffede6;
+      border-radius: 5px;
+      padding: 1px 6px;
+      margin-right: 2px;
+    }
+    .tp.e {
+      color: #0e7490;
+      background: #e6f6fa;
+    }
+    /* kanban */
+    .kan {
+      background-color: #fafbfc;
+      background-image: radial-gradient(#e6e8ee 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+    .khead {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      background: #fff;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .khead .t {
+      font-size: 18px;
+      font-weight: 600;
+      position: relative;
+      height: 54px;
+      display: flex;
+      align-items: center;
+    }
+    .khead .t::after {
+      content: "";
+      position: absolute;
+      left: 25%;
+      right: 25%;
+      bottom: 0;
+      height: 3px;
+      border-radius: 2px;
+      background: #1f2329;
+    }
+    .khead .cron {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: #4b5260;
+    }
+    .dot-g {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    .stats {
+      margin: 18px 24px 0;
+      height: 146px;
+      background: #fff;
+      border: 1px solid #eceef3;
+      border-radius: 14px;
+      display: flex;
+    }
+    .stat {
+      flex: 1;
+      padding: 20px 24px;
+      position: relative;
+    }
+    .stat + .stat {
+      border-left: 1px solid #f0f1f4;
+    }
+    .stat .ic {
+      width: 22px;
+      height: 22px;
+      color: #6b7280;
+    }
+    .stat .v {
+      font-size: 38px;
+      font-weight: 700;
+      margin-top: 8px;
+      line-height: 44px;
+      display: grid;
+    }
+    .stat .v > span {
+      grid-area: 1 / 1;
+    }
+    .stat .l {
+      font-size: 15px;
+      color: #737985;
+      margin-top: 4px;
+    }
+    .stat.warnc .ic,
+    .stat.warnc .v {
+      color: #dc6a0c;
+    }
+    .ksec {
+      margin: 22px 24px 12px;
+      display: flex;
+      align-items: center;
+      font-size: 19px;
+      font-weight: 600;
+    }
+    .ksec .flt {
+      margin-left: auto;
+      font-size: 15px;
+      font-weight: 500;
+      color: #4b5260;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .crow {
+      position: relative;
+      margin: 0 24px 12px;
+      background: #fff;
+      border: 1px solid #eceef3;
+      border-radius: 12px;
+    }
+    .crow .rw {
+      height: 90px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 16px;
+    }
+    .acts {
+      flex: none;
+      display: flex;
+      gap: 10px;
+      margin-left: 6px;
+    }
+    .abtn {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: #f3f4f7;
+      color: #4b5260;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .abtn.dim {
+      color: #b4b9c3;
+    }
+    .abtn .ic {
+      width: 18px;
+      height: 18px;
+    }
+    .cdet {
+      height: 0;
+      overflow: hidden;
+    }
+    .dgrid {
+      margin: 0 18px;
+      border-top: 1px solid #f0f1f4;
+      padding: 14px 0 16px;
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      row-gap: 10px;
+      font-size: 15px;
+      line-height: 23px;
+    }
+    .dgrid .k {
+      color: #8a909c;
+    }
+    .dgrid .v {
+      color: #1f2329;
+      display: grid;
+      justify-items: start;
+    }
+    .dgrid .v > span {
+      grid-area: 1 / 1;
+    }
+    .dgrid .inp {
+      position: relative;
+      padding: 0 10px;
+      margin-left: -10px;
+    }
+    .dgrid .inp i.box {
+      position: absolute;
+      inset: -3px -2px;
+      border: 1.5px solid #ff6b4a;
+      border-radius: 7px;
+      box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.12);
+      opacity: 0;
+    }
+    .dgrid .fixv {
+      color: #16794a;
+    }
+    .crow .hl {
+      position: absolute;
+      inset: -1px;
+      border-radius: 12px;
+      border: 2px solid #ff6b4a;
+      opacity: 0;
+    }
+    .st {
+      width: 100px;
+      flex: none;
+      display: grid;
+      font-size: 16px;
+    }
+    .st > span {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .st .pend {
+      color: #dc6a0c;
+    }
+    .st .done {
+      color: #16a34a;
+    }
+    .ctext {
+      flex: 1;
+      min-width: 0;
+    }
+    .ctext .a {
+      font-size: 18px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .ctext .b {
+      font-size: 15px;
+      color: #737985;
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+    .cpath {
+      width: 230px;
+      flex: none;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 15px;
+      color: #4b5260;
+      white-space: nowrap;
+    }
+    .sev {
+      flex: none;
+      font-size: 15px;
+      border-radius: 8px;
+      padding: 4px 12px;
+    }
+    .sev.r {
+      color: #e5484d;
+      background: #fdecec;
+    }
+    .sev.y {
+      color: #c26a06;
+      background: #fff4e5;
+    }
+    .detail {
+      margin: 6px 24px 0;
+      background: #fff;
+      border: 1.5px solid #ffd3c2;
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 30px rgba(232, 69, 60, 0.08);
+    }
+    .detail .dt {
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .detail .cols {
+      display: flex;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .src {
+      flex: 1;
+      position: relative;
+      border: 1px solid #eceef3;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fafbfc;
+    }
+    .src .s1 {
+      font-size: 14px;
+      color: #737985;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .src .s2 {
+      font-size: 18px;
+      margin-top: 8px;
+      white-space: nowrap;
+    }
+    .src .s2 b {
+      color: #e5484d;
+    }
+    .src .adopt {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+      color: #3d5afe;
+      border: 1px solid #c9d3fb;
+      border-radius: 8px;
+      padding: 5px 12px;
+      background: #fff;
+    }
+    .src .okfill {
+      position: absolute;
+      inset: -1px;
+      border-radius: 12px;
+      border: 2px solid #22c55e;
+      background: rgba(34, 197, 94, 0.05);
+      opacity: 0;
+    }
+    /* right */
+    .right {
+      width: 430px;
+    }
+    .rhead {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+    }
+    .rpill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f2f3f7;
+      border-radius: 14px;
+      padding: 4px;
+    }
+    .rpill .a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 17px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+    .rpill .b {
+      padding: 6px 10px;
+      color: #6b7280;
+      display: flex;
+    }
+    .rhead .icons {
+      margin-left: auto;
+      display: flex;
+      gap: 18px;
+      color: #6b7280;
+    }
+    .empty {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 200px;
+      text-align: center;
+    }
+    .cluster {
+      position: relative;
+      height: 120px;
+      width: 200px;
+      margin: 0 auto;
+    }
+    .cluster .sq {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(40, 50, 90, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f2329;
+    }
+    .cluster .sq .ic {
+      width: 26px;
+      height: 26px;
+    }
+    .empty .t {
+      font-size: 26px;
+      font-weight: 500;
+      margin-top: 18px;
+    }
+    .empty .s {
+      font-size: 16px;
+      color: #737985;
+      line-height: 1.7;
+      margin: 10px 36px 0;
+    }
+    .chips {
+      position: absolute;
+      left: 16px;
+      right: 0;
+      bottom: 194px;
+      height: 42px;
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .chip {
+      position: relative;
+      flex: none;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 13px;
+      border: 1px solid #e3e6ec;
+      border-radius: 12px;
+      font-size: 16px;
+      background: #fff;
+    }
+    .chip .act {
+      position: absolute;
+      inset: -1px;
+      border-radius: 12px;
+      border: 1.5px solid #3d5afe;
+      background: rgba(61, 90, 254, 0.07);
+      opacity: 0;
+    }
+    .chip > *:not(.act) {
+      position: relative;
+    }
+    .inbox {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      height: 166px;
+      border: 1.5px solid #dfe2ea;
+      border-radius: 16px;
+      background: #fff;
+    }
+    .inbox .focus {
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 16px;
+      border: 1.5px solid #3d5afe;
+      box-shadow: 0 0 0 4px rgba(61, 90, 254, 0.1);
+      opacity: 0;
+    }
+    .dchips {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      display: flex;
+      gap: 6px;
+    }
+    .dchip {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 8px;
+      background: #f2f3f8;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #374151;
+    }
+    .dchip .ic {
+      width: 15px;
+      height: 15px;
+      color: #6b7280;
+    }
+    .dchip .x {
+      width: 11px;
+      height: 11px;
+      color: #828893;
+      margin-left: 2px;
+    }
+    .intext {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 50px;
+      font-size: 17px;
+      line-height: 27px;
+      display: grid;
+    }
+    .intext > div {
+      grid-area: 1 / 1;
+    }
+    .intext .ph {
+      color: #a3a8b2;
+    }
+    .inbar {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #4b5260;
+    }
+    .inbar .ib {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+    .srcbtn {
+      position: relative;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 11px;
+      border: 1px solid #e3e6ec;
+      border-radius: 9px;
+      font-size: 15px;
+      color: #374151;
+    }
+    .send {
+      margin-left: auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #3d5afe;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .send .ic {
+      width: 20px;
+      height: 20px;
+    }
+    .send .ic svg {
+      stroke-width: 2.4;
+    }
+    .chat {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 64px;
+      bottom: 194px;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(transparent 0, #000 22px);
+      mask-image: linear-gradient(transparent 0, #000 22px);
+    }
+    #c-chatin {
+      padding: 8px 18px 0;
+    }
+    .usrc {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .usrc span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #374151;
+      background: #f2f3f6;
+      border-radius: 10px;
+      padding: 5px 10px;
+    }
+    .usrc .ic {
+      width: 15px;
+      height: 15px;
+      color: #6b7280;
+    }
+    .ubub {
+      margin: 8px 0 0 34px;
+      background: #f6efea;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .bwho {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 16px;
+      color: #4b5260;
+    }
+    .bmsg {
+      margin-top: 10px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: #1f2329;
+    }
+    .btool {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 15px;
+      color: #374151;
+    }
+    .btool .ic {
+      width: 17px;
+      height: 17px;
+    }
+    .fcard {
+      margin-top: 16px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #eceef3;
+      box-shadow: 0 10px 30px rgba(40, 50, 90, 0.1);
+      padding: 16px 16px 14px;
+    }
+    .fcard .ft {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .fcard .fl {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #737985;
+    }
+    .fsel {
+      position: relative;
+      margin-top: 6px;
+      height: 40px;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      font-size: 14.5px;
+      color: #1f2329;
+      white-space: nowrap;
+      background: #fff;
+    }
+    .fsel > .ic {
+      width: 17px;
+      height: 17px;
+      color: #4b5260;
+    }
+    .fsel .dn {
+      margin-left: auto;
+      width: 15px;
+      height: 15px;
+    }
+    .fvst {
+      display: grid;
+      overflow: hidden;
+    }
+    .fvst > span {
+      grid-area: 1 / 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ph2 {
+      color: #a3a8b2;
+    }
+    .fopts {
+      position: absolute;
+      left: -1px;
+      right: -1px;
+      top: 44px;
+      z-index: 5;
+      background: #fff;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(30, 40, 90, 0.16);
+      padding: 4px;
+      opacity: 0;
+    }
+    .fo {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+    .fo .ic {
+      width: 16px;
+      height: 16px;
+      color: #4b5260;
+    }
+    .fo span {
+      margin-left: auto;
+      font-size: 12.5px;
+      color: #828893;
+    }
+    .frow {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .frow .fsel {
+      flex: 1;
+    }
+    .ftog {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .tg {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #FF8A3D, #FF4D4D);
+    }
+    .tg i {
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .fbtns {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .fbtn {
+      height: 36px;
+      padding: 0 18px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+    .fbtn > span {
+      grid-area: 1 / 1;
+    }
+    .fbtn.c {
+      border: 1px solid #e3e6ec;
+      color: #4b5260;
+    }
+    .fbtn.ok {
+      background: #1f2329;
+      color: #fff;
+      font-weight: 500;
+    }
+    .bstart {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #e8453c;
+    }
+    .bstart .sub {
+      font-weight: 400;
+      font-size: 14px;
+      color: #737985;
+    }
+    .dotp {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF8A3D, #FF4D4D);
+      box-shadow: 0 0 0 4px rgba(255, 90, 70, 0.15);
+    }
+    /* dialog */
+    #c-backdrop {
+      position: absolute;
+      left: 48px;
+      top: 40px;
+      width: 1824px;
+      height: 1000px;
+      border-radius: 18px;
+      background: rgba(22, 28, 48, 0.4);
+      opacity: 0;
+    }
+    #c-dlg {
+      position: absolute;
+      left: 560px;
+      top: 196px;
+      width: 800px;
+      height: 690px;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 40px 100px rgba(10, 15, 40, 0.3);
+      padding: 28px 32px;
+      opacity: 0;
+    }
+    .dh {
+      display: flex;
+      align-items: center;
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .dh .ic {
+      margin-left: auto;
+      width: 24px;
+      height: 24px;
+      color: #374151;
+    }
+    .dbox {
+      margin-top: 22px;
+      height: 486px;
+      border: 1px solid #e7e9ef;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .dsearch {
+      height: 46px;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      color: #828893;
+      font-size: 18px;
+    }
+    .drow {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      white-space: nowrap;
+    }
+    .drow .chev {
+      width: 16px;
+      height: 16px;
+      color: #828893;
+    }
+    .drow .desc {
+      font-size: 15px;
+      color: #828893;
+      margin-left: 2px;
+    }
+    .cb {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid #c9cdd6;
+      border-radius: 5px;
+      flex: none;
+    }
+    .cb .on {
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 5px;
+      background: #3d5afe;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+    .cb .on .ic {
+      width: 15px;
+      height: 15px;
+    }
+    .cb .on .ic svg {
+      stroke-width: 3;
+    }
+    .dd1 {
+      padding-left: 34px;
+    }
+    .dfoot {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: 26px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .dfoot .cnt {
+      font-size: 18px;
+      line-height: 24px;
+      color: #6b7280;
+      display: block;
+      white-space: nowrap;
+      font-family: "Noto Sans SC", sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    .numstack {
+      display: inline-grid;
+      vertical-align: baseline;
+      line-height: 24px;
+      margin: 0 6px;
+      text-align: center;
+    }
+    .numstack > span {
+      grid-area: 1 / 1;
+      line-height: 24px;
+      opacity: 0;
+    }
+    .numstack > span:first-child {
+      opacity: 1;
+    }
+    .dbtn {
+      height: 52px;
+      padding: 0 28px;
+      border-radius: 12px;
+      font-size: 19px;
+      display: flex;
+      align-items: center;
+    }
+    .dbtn.c {
+      margin-left: auto;
+      background: #f1f2f6;
+      color: #374151;
+    }
+    .dbtn.ok {
+      background: #3d5afe;
+      color: #fff;
+      font-weight: 500;
+    }
+    /* cursor */
+    #c-cursor {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 46px;
+      height: 46px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+    }
+    /* captions */
+    #c-caps {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 104px;
+      display: grid;
+      justify-items: center;
+    }
+    .cap {
+      grid-area: 1 / 1;
+      font-size: 34px;
+      font-weight: 600;
+      color: #1d2230;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(80, 90, 140, 0.12);
+      box-shadow: 0 14px 40px rgba(30, 40, 90, 0.16);
+      border-radius: 20px;
+      padding: 14px 32px;
+      white-space: nowrap;
+      opacity: 0;
+    }
+    .cap em {
+      font-style: normal;
+      background: linear-gradient(90deg, #FF8A3D, #FF4D4D);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  </style>
+
+  <div id="root" data-composition-id="console" data-width="1920" data-height="1080">
+    <div id="c-cam">
+      <div id="c-win">
+        <div class="topbar">
+          <i class="ic" data-i="menu" style="width: 26px; height: 26px; color: #374151"></i>
+          <img id="c-logo" class="ov-lockup" src="assets/brand/brand-lockup-light.svg" alt="OpenViking" />
+          <div class="brand">Context</div>
+          <div class="gsearch"><i class="ic" data-i="search"></i>搜索产品或文档</div>
+          <i class="ic" data-i="cloud" style="width: 26px; height: 26px; color: #3d5afe"></i>
+          <div class="avatar"></div>
+        </div>
+        <div class="subbar">
+          <div class="orgdot"></div>
+          <span>星海科技</span><span class="tag">企业版</span
+          ><i class="ic gray" data-i="chevD" style="width: 16px"></i>
+          <span class="gray">/</span>
+          <i class="ic" data-i="cube"></i><span>产品团队</span
+          ><i class="ic gray" data-i="chevD" style="width: 16px"></i>
+          <span class="gray">/</span>
+          <i class="ic" data-i="user"></i><span>林晓</span
+          ><i class="ic gray" data-i="chevD" style="width: 16px"></i>
+          <div class="subright">
+            <i class="ic" data-i="help"></i><i class="ic" data-i="chart"></i
+            ><i class="ic" data-i="gear"></i>
+            <span style="display: flex; gap: 6px; align-items: center"
+              ><i class="ic" data-i="key"></i>API Key</span
+            >
+          </div>
+        </div>
+
+        <div class="body">
+          <!-- LEFT: context tree -->
+          <div class="panel left">
+            <div class="lbtns">
+              <div><i class="ic" data-i="plug"></i>连接 Agent</div>
+              <div class="sep-v"></div>
+              <div><i class="ic" data-i="upload"></i>导入资源</div>
+            </div>
+            <div class="lsearch">
+              <div class="box"><i class="ic" data-i="search"></i>搜索文件 ⌘+K…</div>
+              <div class="btn"><i class="ic" data-i="refresh"></i></div>
+            </div>
+            <div class="tree">
+              <div class="row d0" id="c-r-user">
+                <i class="ic chev" data-i="chevR"></i><i class="ic fi" data-i="folder"></i>user<span class="desc">用户的个性化记忆</span>
+              </div>
+              <div class="row d0">
+                <i class="ic chev" data-i="chevR"></i><i class="ic fi" data-i="folder"></i>agent<span class="desc">Agent 的能力、工具和经验</span>
+              </div>
+              <div class="row d0">
+                <i class="ic chev" data-i="chevD"></i><i class="ic fi" data-i="folderOpen"></i>resources<span class="desc">共享知识资料</span>
+              </div>
+              <div class="row d1" id="c-r-doc">
+                <i class="ic chev" data-i="chevR"></i><i class="ic fi" data-i="folder"></i>产品文档<span class="desc">36 个文件</span>
+              </div>
+              <div class="row d1" id="c-r-meet">
+                <i class="ic chev" data-i="chevD"></i><i class="ic fi" data-i="folderOpen"></i>会议纪要<span class="desc">52 个文件</span>
+              </div>
+              <div class="row d2" id="c-r-meetf">
+                <div class="sel" id="c-sel-meet" style="opacity: 1"></div>
+                <span class="md">M↓</span><span>2026-11-05 产品周会.md</span>
+              </div>
+              <div class="row d1" id="c-r-tick">
+                <i class="ic chev" data-i="chevR"></i><i class="ic fi" data-i="folder"></i>客服工单<span class="desc">40 个文件</span>
+              </div>
+              <div class="row d1" id="c-r-team">
+                <i class="ic chev" data-i="chevR"></i><i class="ic fi" data-i="folder"></i>团队经验<span class="desc">18 个文件</span>
+              </div>
+              <!-- compiled wiki (appears) -->
+              <div class="row d1 wr" id="c-r-wiki">
+                <i class="ic chev" data-i="chevD"></i><i class="ic fi book" data-i="book"></i>产品知识 Wiki<span class="badge-new">新</span>
+              </div>
+              <div class="row d2 wr">
+                <i class="ic chev" data-i="chevD"></i><i class="ic fi" data-i="folderOpen"></i>concept
+              </div>
+              <div class="row d3 wr" id="c-r-c1">
+                <span class="md">M↓</span>退款政策.md<i class="ic warn" data-i="warn"></i>
+              </div>
+              <div class="row d3 wr" id="c-r-c2">
+                <span class="md">M↓</span>企业版席位与定价.md<i class="ic warn" data-i="warn"></i>
+              </div>
+              <div class="row d3 wr"><span class="md">M↓</span>数据保留策略.md</div>
+              <div class="row d2 wr">
+                <i class="ic chev" data-i="chevD"></i><i class="ic fi" data-i="folderOpen"></i>entity
+              </div>
+              <div class="row d3 wr"><span class="md">M↓</span>智能客服助手.md</div>
+              <div class="row d3 wr"><span class="md">M↓</span>星海 CRM.md</div>
+              <div class="row d3 wr"><span class="md">M↓</span>开放 API.md</div>
+              <div class="row d2 wr" id="c-r-idx">
+                <div class="sel" id="c-sel-idx"></div>
+                <i class="ic chev none" data-i="chevR"></i><span class="md">M↓</span><span>index.md</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CENTER: preview / kanban -->
+          <div class="panel center">
+            <div class="ctabs">
+              <div class="tab" id="c-tab1">
+                <div class="on" id="c-tab1-on" style="opacity: 1"></div>
+                <div class="lbl-stack">
+                  <span id="c-tab1-a"><i class="ic" data-i="file" style="width: 18px"></i>2026-11-05 产品周会.md</span>
+                  <span id="c-tab1-b" style="opacity: 0"><span class="md">M↓</span>index.md</span>
+                </div>
+              </div>
+              <div class="tab" id="c-tab2">
+                <div class="on" id="c-tab2-on"></div>
+                <i class="ic" data-i="grid" style="width: 18px"></i><span id="c-tab2-l">看板</span>
+              </div>
+            </div>
+            <div class="cbody">
+              <!-- doc -->
+              <div class="layer" id="c-L-doc">
+                <div class="pathbar">
+                  <span class="p mono">viking://resources/会议纪要/</span><span class="f">2026-11-05 产品周会.md</span>
+                  <i class="ic gray" data-i="copy" style="width: 18px"></i>
+                  <div class="tools">
+                    <div class="seg"><span class="a">预览</span><span>源码</span></div>
+                    <div class="tbtn"><i class="ic" data-i="history"></i></div>
+                    <div class="tbtn"><i class="ic" data-i="copy"></i></div>
+                  </div>
+                </div>
+                <div class="lines">
+                  <div class="ln h"><span class="n">1</span># 产品周会纪要</div>
+                  <div class="ln"><span class="n">2</span>时间：2026-11-05 14:00–15:00</div>
+                  <div class="ln"><span class="n">3</span>参会：产品、客服、研发</div>
+                  <div class="ln"><span class="n">4</span></div>
+                  <div class="ln h"><span class="n">5</span>## 本周结论</div>
+                  <div class="ln"><span class="n">6</span>1. 企业版席位上限由 200 上调至 500</div>
+                  <div class="ln"><span class="n">7</span>2. 退款时效统一为 7 天，客服话术同步更新</div>
+                  <div class="ln"><span class="n">8</span>3. 智能客服助手 12 月开始灰度</div>
+                  <div class="ln"><span class="n">9</span></div>
+                  <div class="ln h"><span class="n">10</span>## 待办</div>
+                  <div class="ln"><span class="n">11</span>- 更新定价页与产品文档</div>
+                  <div class="ln"><span class="n">12</span>- 客服团队补充退款相关 FAQ</div>
+                  <div class="ln"><span class="n">13</span>- 研发评估开放 API 限流方案</div>
+                </div>
+                <div class="cfoot">1,209 字符数 · 更新于 2026-11-05 18:20</div>
+              </div>
+
+              <!-- compiled index.md -->
+              <div class="layer" id="c-L-idx" style="opacity: 0">
+                <div class="pathbar">
+                  <span class="p mono">viking://resources/产品知识 Wiki/</span><span class="f">index.md</span>
+                  <i class="ic gray" data-i="copy" style="width: 18px"></i>
+                  <div class="tools">
+                    <div class="ebtn"><i class="ic" data-i="edit" style="width: 17px"></i>编辑</div>
+                    <div class="tbtn"><i class="ic" data-i="history"></i></div>
+                    <div class="tbtn"><i class="ic" data-i="copy"></i></div>
+                  </div>
+                </div>
+                <div class="idx">
+                  <div class="yaml ia">
+                    <div class="yh">yaml</div>
+                    <div class="yb mono">
+                      <div><span class="yk">type:</span> index</div>
+                      <div><span class="yk">title:</span> 产品知识 Wiki</div>
+                      <div><span class="yk">description:</span> 汇总产品文档、会议纪要与客服工单中的产品知识</div>
+                      <div><span class="yk">tags:</span> [产品, 定价, 客服]</div>
+                    </div>
+                  </div>
+                  <h2 class="ia">产品知识 Wiki</h2>
+                  <p class="ia">
+                    由 128 份产品文档、会议纪要和客服工单编译而成，共 42 个页面。每页先给结论，再列出处；多个来源的相关内容已合并到同一主题下。
+                  </p>
+                  <h3 class="ia">页面索引</h3>
+                  <ul>
+                    <li class="ia"><span class="tp">concept</span><span class="lk">退款政策</span>：退款时效、申请条件与客服处理口径</li>
+                    <li class="ia"><span class="tp">concept</span><span class="lk">企业版席位与定价</span>：席位上限、计费方式与历次调整</li>
+                    <li class="ia"><span class="tp">concept</span><span class="lk">数据保留策略</span>：会话与日志的保留周期、删除流程</li>
+                    <li class="ia"><span class="tp e">entity</span><span class="lk">智能客服助手</span>：功能范围、灰度计划与常见问题</li>
+                    <li class="ia"><span class="tp e">entity</span><span class="lk">星海 CRM</span>：与客服工单、订单系统的集成方式</li>
+                    <li class="ia"><span class="tp e">entity</span><span class="lk">开放 API</span>：鉴权、限流与版本变更记录</li>
+                  </ul>
+                </div>
+                <div class="cfoot">2,846 字符数 · 更新于 2026-11-09 09:00</div>
+              </div>
+
+              <!-- kanban -->
+              <div class="layer kan" id="c-L-kan" style="opacity: 0">
+                <div class="khead">
+                  <div class="t">生成效果</div>
+                  <div class="cron"><span class="dot-g"></span>定时更新 · 每天 09:00</div>
+                </div>
+                <div class="stats">
+                  <div class="stat ks warnc">
+                    <i class="ic" data-i="warn"></i>
+                    <div class="v"><span id="c-k-2">2</span><span id="c-k-1" style="opacity: 0">1</span></div>
+                    <div class="l">待确认冲突</div>
+                  </div>
+                </div>
+                <div class="ksec ka">全部冲突<span class="flt"><i class="ic" data-i="filter" style="width: 17px"></i>严重程度 全部<i class="ic" data-i="chevD" style="width: 15px"></i></span></div>
+                <div class="crow" id="c-cr1">
+                  <div class="hl" id="c-cr1-hl"></div>
+                  <div class="rw">
+                    <div class="st">
+                      <span class="pend" id="c-cr1-p"><i class="ic" data-i="warn" style="width: 18px"></i>待确认</span>
+                      <span class="done" id="c-cr1-d" style="opacity: 0"><i class="ic" data-i="checkc" style="width: 18px"></i>已解决</span>
+                    </div>
+                    <div class="ctext">
+                      <div class="a">退款时效说明不一致</div>
+                      <div class="b">产品文档写 7 天内可退款，客服工单按 15 天办理</div>
+                    </div>
+                    <div class="cpath mono"><i class="ic" data-i="folder" style="width: 17px"></i>viking://resources/产品…</div>
+                    <span class="sev r">严重</span>
+                    <div class="acts">
+                      <div class="abtn" id="c-edit"><i class="ic" data-i="edit"></i></div>
+                      <div class="abtn dim"><i class="ic" data-i="cmt"></i></div>
+                    </div>
+                  </div>
+                  <div class="cdet" id="c-det">
+                    <div class="dgrid">
+                      <div class="k">原因</div>
+                      <div class="v"><span>产品文档/退款说明.md 写明购买后 7 天内可全额退款，客服工单 #4821 按 15 天内无理由退款办理，<br />同一退款场景下时效不一致，属于面向客户的政策类事实冲突，severity 高。</span></div>
+                      <div class="k">发生时间</div>
+                      <div class="v"><span class="mono">2026-11-09T09:00:12.000Z</span></div>
+                      <div class="k">修复时间</div>
+                      <div class="v"><span id="c-ft0">—</span><span class="mono fixv" id="c-ft1" style="opacity: 0">2026-11-09T10:24:05.000Z</span></div>
+                      <div class="k">修复方案</div>
+                      <div class="v"><span id="c-fp0">—</span><span class="inp" id="c-fp1"><i class="box" id="c-fp-box"></i><span id="c-fp-t" class="fixv" style="display: inline-block">以产品文档 7 天为准，客服话术同步更新</span></span></div>
+                      <div class="k">修复依据</div>
+                      <div class="v"><span id="c-fb0">—</span><span class="fixv" id="c-fb1" style="opacity: 0">产品文档/退款说明.md 为现行退款政策（2026-10 版）</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="crow" id="c-cr2">
+                  <div class="rw">
+                    <div class="st">
+                      <span class="pend"><i class="ic" data-i="warn" style="width: 18px"></i>待确认</span>
+                    </div>
+                    <div class="ctext">
+                      <div class="a">企业版席位上限不一致</div>
+                      <div class="b">11-05 周会已上调至 500 席，定价页仍写 200 席</div>
+                    </div>
+                    <div class="cpath mono"><i class="ic" data-i="folder" style="width: 17px"></i>viking://resources/产品…</div>
+                    <span class="sev y">中等</span>
+                    <div class="acts">
+                      <div class="abtn"><i class="ic" data-i="edit"></i></div>
+                      <div class="abtn dim"><i class="ic" data-i="cmt"></i></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: VikingBot -->
+          <div class="panel right" id="c-right">
+            <div class="rhead">
+              <div class="rpill">
+                <div class="a"><i class="ic" data-i="bot"></i>VikingBot</div>
+                <div class="b"><i class="ic" data-i="terminal"></i></div>
+              </div>
+              <div class="icons">
+                <i class="ic" data-i="gear"></i><i class="ic" data-i="history"></i><i class="ic" data-i="chatplus"></i>
+              </div>
+            </div>
+            <div class="empty" id="c-empty">
+              <div class="cluster">
+                <div class="sq" style="left: 14px; top: 44px"><i class="ic" data-i="bulb"></i></div>
+                <div class="sq" style="left: 74px; top: 0px"><i class="ic" data-i="book"></i></div>
+                <div class="sq" style="left: 134px; top: 44px"><i class="ic" data-i="video"></i></div>
+              </div>
+              <div class="t">欢迎使用 VikingBot</div>
+              <div class="s">连接你的资料、记忆与上下文，<br />让每一份数据都成为可用的知识</div>
+            </div>
+            <div class="chat" id="c-chat">
+              <div id="c-chatin">
+                <div class="usrc" id="c-usrc">
+                  <span><i class="ic" data-i="folder"></i>viking://resources/产品文档/</span>
+                  <span><i class="ic" data-i="folder"></i>viking://resources/会议纪要/</span>
+                  <span><i class="ic" data-i="folder"></i>viking://resources/客服工单/</span>
+                </div>
+                <div class="ubub" id="c-ubub">将选中的目录中的文件整理成 Wiki，保留来源和文档之间的关联</div>
+                <div class="bwho" id="c-bwho"><i class="ic" data-i="cmtc"></i>VikingBot</div>
+                <div class="bmsg" id="c-b1">我先查看 产品文档、会议纪要、客服工单 中的全部资料。</div>
+                <div class="btool" id="c-b2"><i class="ic" data-i="wrench"></i>已调用工具 <span>openviking_tree</span></div>
+                <div class="bmsg" id="c-b3">共读取 128 份资料，准备按「知识 Wiki」整理。需要选用对应的编译 Skill，该 Skill 会定义整理方式、文档结构以及检查规则。</div>
+                <div class="fcard" id="c-form">
+                  <div class="ft">选择编译 Wiki 的 Skill</div>
+                  <div class="fl">skill 目录</div>
+                  <div class="fsel" id="c-fsel" style="z-index: 6">
+                    <i class="ic" data-i="folder"></i>
+                    <div class="fvst"><span id="c-fv0" class="ph2">请选择 Skill</span><span id="c-fv1" style="opacity: 0">viking://system/skills/llm-wiki/SKI…</span></div>
+                    <i class="ic dn" data-i="chevD"></i>
+                    <div class="fopts" id="c-fopts" data-layout-allow-overlap>
+                      <div class="fo" id="c-fo1"><i class="ic" data-i="book"></i>llm-wiki/SKILL.md<span>知识 Wiki</span></div>
+                      <div class="fo"><i class="ic" data-i="report"></i>daily-report/SKILL.md<span>日报</span></div>
+                      <div class="fo"><i class="ic" data-i="users"></i>team-playbook/SKILL.md<span>经验总结</span></div>
+                    </div>
+                  </div>
+                  <div class="fl">目标目录</div>
+                  <div class="fsel"><i class="ic" data-i="folder"></i><div class="fvst"><span>viking://resources/产品知识 Wiki/</span></div></div>
+                  <div class="fl">更新策略</div>
+                  <div class="frow">
+                    <div class="fsel"><i class="ic" data-i="history"></i><div class="fvst"><span>定时更新 · 每天 09:00</span></div><i class="ic dn" data-i="chevD"></i></div>
+                    <div class="ftog"><span class="tg"><i></i></span>增量编译</div>
+                  </div>
+                  <div class="fbtns"><div class="fbtn c">取消</div><div class="fbtn ok" id="c-fok"><span id="c-fok0">确认</span><span id="c-fok1" style="opacity: 0">已确认</span></div></div>
+                </div>
+                <div class="bstart" id="c-start"><span class="dotp"></span>开始编译<span class="sub">结果将写入 产品知识 Wiki</span></div>
+              </div>
+            </div>
+            <div class="chips" data-layout-allow-overflow>
+              <div class="chip" id="c-chip-wiki"><div class="act" id="c-chip-act"></div><i class="ic" data-i="book"></i><span>Wiki</span></div>
+              <div class="chip"><i class="ic" data-i="video"></i>知识视频</div>
+              <div class="chip"><i class="ic" data-i="report"></i>日报</div>
+              <div class="chip"><i class="ic" data-i="users"></i>经验总结</div>
+            </div>
+            <div class="inbox">
+              <div class="focus" id="c-focus"></div>
+              <div class="dchips">
+                <div class="dchip dc"><i class="ic" data-i="folder"></i>产品文档<i class="ic x" data-i="x"></i></div>
+                <div class="dchip dc"><i class="ic" data-i="folder"></i>会议纪要<i class="ic x" data-i="x"></i></div>
+                <div class="dchip dc"><i class="ic" data-i="folder"></i>客服工单<i class="ic x" data-i="x"></i></div>
+              </div>
+              <div class="intext">
+                <div class="ph" id="c-ph">输入消息，@ 引用上下文…</div>
+                <div id="c-typed">将选中的目录中的文件整理成 Wiki，保留来源和文档之间的关联</div>
+              </div>
+              <div class="inbar">
+                <div class="ib"><i class="ic" data-i="plus"></i></div>
+                <div class="ib">@</div>
+                <div class="srcbtn" id="c-srcbtn"><i class="ic" data-i="folder" style="width: 17px"></i>源目录</div>
+                <div class="send" id="c-send"><i class="ic" data-i="up"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- directory picker dialog -->
+      <div id="c-backdrop" data-layout-allow-occlusion></div>
+      <div id="c-dlg" data-layout-allow-occlusion data-layout-allow-overlap>
+        <div class="dh">选择生成 Wiki 的源目录<i class="ic" data-i="x"></i></div>
+        <div class="dbox">
+          <div class="dsearch"><i class="ic" data-i="search"></i>搜索目录名称</div>
+          <div style="height: 8px"></div>
+          <div class="drow"><i class="ic chev" data-i="chevR"></i><span class="cb"></span><i class="ic" data-i="folder"></i>user<span class="desc">用户的个性化记忆</span></div>
+          <div class="drow"><i class="ic chev" data-i="chevR"></i><span class="cb"></span><i class="ic" data-i="folder"></i>agent<span class="desc">Agent 的能力、工具和经验</span></div>
+          <div class="drow"><i class="ic chev" data-i="chevD"></i><span class="cb"></span><i class="ic" data-i="folderOpen"></i>resources<span class="desc">共享知识资料</span></div>
+          <div class="drow dd1"><i class="ic chev" data-i="chevR"></i><span class="cb" id="c-cb1"><span class="on"><i class="ic" data-i="check"></i></span></span><i class="ic" data-i="folder"></i>产品文档<span class="desc">36 个文件</span></div>
+          <div class="drow dd1"><i class="ic chev" data-i="chevR"></i><span class="cb" id="c-cb2"><span class="on"><i class="ic" data-i="check"></i></span></span><i class="ic" data-i="folder"></i>会议纪要<span class="desc">52 个文件</span></div>
+          <div class="drow dd1"><i class="ic chev" data-i="chevR"></i><span class="cb" id="c-cb3"><span class="on"><i class="ic" data-i="check"></i></span></span><i class="ic" data-i="folder"></i>客服工单<span class="desc">40 个文件</span></div>
+          <div class="drow dd1"><i class="ic chev" data-i="chevR"></i><span class="cb"></span><i class="ic" data-i="folder"></i>团队经验<span class="desc">18 个文件</span></div>
+          <div class="drow"><i class="ic chev" data-i="chevR"></i><span class="cb"></span><i class="ic" data-i="folder"></i>system<span class="desc">系统设置的技能等</span></div>
+        </div>
+        <div class="dfoot">
+          <div class="cnt">已选<span class="numstack" id="c-num"><span>0</span><span>1</span><span>2</span><span>3</span></span>个</div>
+          <div class="dbtn c">取消</div>
+          <div class="dbtn ok" id="c-okbtn">确定</div>
+        </div>
+      </div>
+
+      <!-- cursor -->
+      <svg id="c-cursor" viewBox="0 0 32 32">
+        <path d="M5 3 L5 25 L11 19.5 L15 28.5 L19 26.8 L15 18 L23 18 Z" fill="#111" stroke="#fff" stroke-width="2" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <div id="c-caps">
+      <div class="cap" id="c-cap1">所有资料，都在 OpenViking 的<em>上下文树</em>里</div>
+      <div class="cap" id="c-cap2">选择 <em>Wiki</em>，用一句话说明需求</div>
+      <div class="cap" id="c-cap3">再从上下文树里，<em>勾选源目录</em></div>
+      <div class="cap" id="c-cap4">Compile 在后台<em>读取、抽取、合并</em></div>
+      <div class="cap" id="c-cap5">编译结果<em>写回上下文树</em></div>
+      <div class="cap" id="c-cap6">零散的资料，变成了<em>互相链接的 Wiki</em></div>
+      <div class="cap" id="c-cap7">还能自动发现<em>跨来源的冲突</em></div>
+      <div class="cap" id="c-cap8">在看板里<em>确认冲突</em>，结果写回 Wiki</div>
+      <div class="cap" id="c-cap9"><em>哪里有冲突、为什么冲突</em>，看板里一目了然</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ICONS = {
+        menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+        search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+        cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/><path d="M10 13h.01M14 13h.01"/>',
+        chevD: '<path d="M6 9l6 6 6-6"/>',
+        chevR: '<path d="M9 6l6 6-6 6"/>',
+        cube: '<path d="M12 2.5l8.5 4.7v9.6L12 21.5l-8.5-4.7V7.2z"/><path d="M3.5 7.2L12 12l8.5-4.8M12 12v9.5"/>',
+        user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+        help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/>',
+        chart: '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.5 6"/>',
+        gear: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+        key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',
+        plug: '<path d="M9 2.5v5M15 2.5v5M6 7.5h12v4a6 6 0 0 1-12 0zM12 17.5v4"/>',
+        upload: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+        refresh: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+        folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+        folderOpen: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v1"/><path d="M3 17l2.5-6.5A1.5 1.5 0 0 1 7 9.5h13l-3 8.5H3z"/>',
+        file: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>',
+        book: '<path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13"/>',
+        grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+        history: '<path d="M3.5 12a8.5 8.5 0 1 0 2.8-6.3"/><path d="M3.5 4v4.5H8M12 7.5V12l3 2"/>',
+        copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+        edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+        cmt: '<path d="M5 5h14v10H11l-4 3.5V15H5z"/>',
+        bot: '<rect x="4" y="8" width="16" height="11" rx="4"/><path d="M12 4v4M9 13h.01M15 13h.01"/>',
+        terminal: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M12.5 15H17"/>',
+        chatplus: '<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v5M9.5 10.5h5"/>',
+        bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+        video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10.5l5-3v9l-5-3z"/>',
+        report: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+        users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2A5 5 0 0 1 21 19"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        up: '<path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/>',
+        check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+        checkc: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+        x: '<path d="M6 6l12 12M18 6L6 18"/>',
+        warn: '<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.2h.01"/>',
+        layers: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+        filter: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+        ticket: '<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/>',
+        cmtc: '<path d="M4 12a8 8 0 1 1 3.2 6.4L4 19.5l1-3.4A8 8 0 0 1 4 12z"/>',
+        wrench: '<path d="M14.5 4.5a4.5 4.5 0 0 0 5 6.2l-9.3 9.3a2 2 0 0 1-2.8-2.8l9.3-9.3a4.5 4.5 0 0 1-2.2-3.4z"/>',
+        compile: '<path d="M4 6h7M4 12h5M4 18h7"/><path d="M14 8l4 4-4 4"/><path d="M20 4v16"/>',
+      };
+      document.querySelectorAll('[data-composition-id="console"] .ic[data-i]').forEach((el) => {
+        el.innerHTML = '<svg viewBox="0 0 24 24">' + (ICONS[el.dataset.i] || "") + "</svg>";
+      });
+
+      const R = document.querySelector('[data-composition-id="console"]');
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      const cam = $("#c-cam");
+
+      // typed text -> per-char spans (static markup transform, not timed elements)
+      const typed = $("#c-typed");
+      const chars = Array.from(typed.textContent);
+      typed.innerHTML = chars.map((c) => '<span class="tc">' + c + "</span>").join("");
+
+      // measure target centers in stage (cam) coordinates
+      const cr = cam.getBoundingClientRect();
+      const k = cr.width / 1920 || 1;
+      function P(sel, ax, ay) {
+        const r = (typeof sel === "string" ? $(sel) : sel).getBoundingClientRect();
+        return {
+          x: (r.left - cr.left + r.width * (ax == null ? 0.5 : ax)) / k,
+          y: (r.top - cr.top + r.height * (ay == null ? 0.5 : ay)) / k,
+        };
+      }
+      const pt = {
+        wiki: P("#c-chip-wiki", 0.55, 0.55),
+        src: P("#c-srcbtn", 0.5, 0.55),
+        cb1: P("#c-cb1"),
+        cb2: P("#c-cb2"),
+        cb3: P("#c-cb3"),
+        ok: P("#c-okbtn", 0.5, 0.55),
+        send: P("#c-send"),
+        idx: P("#c-r-idx", 0.32, 0.5),
+        tab2: P("#c-tab2", 0.5, 0.55),
+        cr1: P("#c-cr1", 0.4, 0.5),
+        edit: P("#c-edit"),
+        fsel: P("#c-fsel", 0.5, 0.5),
+        fo1: P("#c-fo1", 0.35, 0.5),
+        fok: P("#c-fok", 0.5, 0.55),
+      };
+
+      const detH = $("#c-det .dgrid").offsetHeight; // static layout, measured once
+      const tl = gsap.timeline({ paused: true });
+
+      // camera helper: put stage point (fx,fy) at screen (sx,sy) with scale s
+      const camTo = (fx, fy, s, sx, sy) => ({ x: sx - fx * s, y: sy - fy * s, scale: s });
+      const FULL = { x: 0, y: 0, scale: 1 };
+      gsap.set(cam, { transformOrigin: "0 0", x: 0, y: 0, scale: 1 });
+
+      // cursor helpers
+      const cur = $("#c-cursor");
+      gsap.set(cur, { transformOrigin: "4px 3px", x: 1960, y: 1120 });
+      const tip = (p) => ({ x: p.x - 7, y: p.y - 4 });
+      const moveTo = (p, at, d) => tl.to(cur, Object.assign({ duration: d || 0.7, ease: "power2.inOut" }, tip(p)), at);
+      const click = (at, target) => {
+        tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power2.in" }, at);
+        tl.to(cur, { scale: 1, duration: 0.14, ease: "power2.out" }, at + 0.07);
+        if (target) {
+          tl.to(target, { scale: 0.95, duration: 0.07, ease: "power2.in" }, at);
+          tl.to(target, { scale: 1, duration: 0.16, ease: "power2.out" }, at + 0.07);
+        }
+      };
+      const capIn = (id, a, b) => {
+        tl.fromTo(id, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, a);
+        tl.to(id, { opacity: 0, filter: "blur(6px)", duration: 0.18, ease: "power2.in" }, b);
+      };
+      const swap = (outEl, inEl, at) => {
+        tl.to(outEl, { opacity: 0, filter: "blur(8px)", duration: 0.18, ease: "power2.in" }, at);
+        tl.fromTo(inEl, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, at + 0.12);
+      };
+
+      // ---------- initial states ----------
+      gsap.set("#c-chat", { opacity: 0 });
+      gsap.set(["#c-usrc", "#c-ubub", "#c-bwho", "#c-b1", "#c-b2", "#c-b3", "#c-form", "#c-start"], { opacity: 0 });
+      gsap.set(".dc", { opacity: 0, scale: 0.7 });
+      gsap.set("#c-typed", { opacity: 1 });
+      gsap.set(".tc", { opacity: 0 });
+      gsap.set(".wr", { opacity: 0, x: -16 });
+      gsap.set("#c-dlg", { opacity: 0, scale: 0.94, transformOrigin: "50% 50%" });
+      gsap.set(".ia", { opacity: 0, y: 10 });
+      gsap.set([".ks", ".ka", "#c-cr1", "#c-cr2"], { opacity: 0, y: 14 });
+      gsap.set("#c-fp-t", { clipPath: "inset(0% 100% 0% 0%)" });
+
+      // ---------- 0: console arrives ----------
+      tl.fromTo("#c-win", { scale: 1.035, filter: "blur(10px)", transformOrigin: "50% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, 0);
+      capIn("#c-cap1", 0.45, 2.55);
+
+      // ---------- pick Wiki ----------
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, camTo(1643, 700, 1.38, 1600, 470)), 1.2);
+      moveTo(pt.wiki, 1.25, 0.85);
+      click(2.15, "#c-chip-wiki");
+      tl.to("#c-chip-act", { opacity: 1, duration: 0.15 }, 2.2);
+      tl.to("#c-focus", { opacity: 1, duration: 0.2 }, 2.25);
+      tl.to("#c-ph", { opacity: 0, duration: 0.1 }, 2.3);
+      tl.to(".tc", { opacity: 1, duration: 0.01, stagger: 1.1 / chars.length }, 2.35);
+      capIn("#c-cap2", 2.7, 4.6);
+
+      // ---------- open directory picker ----------
+      moveTo(pt.src, 3.6, 0.65);
+      click(4.3, "#c-srcbtn");
+      tl.to(cam, Object.assign({ duration: 0.7, ease: "power2.inOut" }, camTo(960, 541, 1.14, 960, 468)), 4.35);
+      tl.to("#c-backdrop", { opacity: 1, duration: 0.3, ease: "power2.out" }, 4.4);
+      tl.to("#c-dlg", { opacity: 1, scale: 1, duration: 0.45, ease: "expo.out" }, 4.45);
+      capIn("#c-cap3", 5.0, 8.3);
+
+      const nums = $$("#c-num > span");
+      [pt.cb1, pt.cb2, pt.cb3].forEach((p, i) => {
+        const t = 5.6 + i * 0.75;
+        moveTo(p, t - 0.55, 0.5);
+        click(t);
+        tl.fromTo("#c-cb" + (i + 1) + " .on", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.18, ease: "expo.out" }, t + 0.03);
+        tl.set(nums[i], { opacity: 0 }, t + 0.05);
+        tl.set(nums[i + 1], { opacity: 1 }, t + 0.05);
+      });
+      moveTo(pt.ok, 7.55, 0.55);
+      click(8.15, "#c-okbtn");
+      tl.to("#c-dlg", { opacity: 0, scale: 0.96, duration: 0.22, ease: "power2.in" }, 8.3);
+      tl.to("#c-backdrop", { opacity: 0, duration: 0.25 }, 8.35);
+      tl.to(cam, Object.assign({ duration: 0.7, ease: "power2.inOut" }, camTo(1643, 700, 1.38, 1600, 470)), 8.35);
+      tl.to(".dc", { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out", stagger: 0.09 }, 8.6);
+
+      // ---------- send ----------
+      moveTo(pt.send, 8.9, 0.7);
+      click(9.75, "#c-send");
+      tl.to(["#c-empty"], { opacity: 0, filter: "blur(6px)", duration: 0.2 }, 9.85);
+      tl.to(["#c-typed", ".dc", "#c-focus"], { opacity: 0, duration: 0.15 }, 9.85);
+      tl.to("#c-ph", { opacity: 1, duration: 0.2 }, 10.0);
+      tl.to("#c-chip-act", { opacity: 0, duration: 0.2 }, 10.0);
+      tl.set("#c-chat", { opacity: 1 }, 9.9);
+      // ---------- wiki appears in the tree ----------
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, camTo(330, 800, 1.42, 700, 470)), 12.6);
+      capIn("#c-cap5", 13.25, 15.3);
+      tl.to(".wr", { opacity: 1, x: 0, duration: 0.4, ease: "expo.out", stagger: 0.14 }, 13.2);
+      tl.fromTo(cur, { x: 1100, y: 1100 }, Object.assign({ duration: 0.8, ease: "power2.out", immediateRender: false }, tip(pt.idx)), 14.4);
+      click(15.25);
+      tl.to("#c-sel-meet", { opacity: 0, duration: 0.15 }, 15.3);
+      tl.to("#c-sel-idx", { opacity: 1, duration: 0.15 }, 15.3);
+
+      // ---------- index.md opens ----------
+      swap("#c-tab1-a", "#c-tab1-b", 15.3);
+      swap("#c-L-doc", "#c-L-idx", 15.3);
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, camTo(950, 470, 1.26, 960, 430)), 15.4);
+      tl.to(".ia", { opacity: 1, y: 0, duration: 0.4, ease: "expo.out", stagger: 0.09 }, 15.6);
+      tl.to(cur, { x: 1980, y: 1100, duration: 0.8, ease: "power2.in" }, 15.6);
+      capIn("#c-cap6", 15.8, 19.6);
+      // slow scroll at a constant scale: snap the translate to whole pixels so every glyph keeps the same
+      // sub-pixel phase and the text moves rigidly with its boxes (fractional translates re-snap each glyph per frame = jitter)
+      tl.to(cam, Object.assign({ duration: 2.8, ease: "power1.inOut", snap: "x,y" }, camTo(950, 640, 1.26, 960, 430)), 16.9);
+
+      // ---------- kanban ----------
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, FULL), 19.6);
+      tl.fromTo(cur, { x: 1300, y: 1100 }, Object.assign({ duration: 0.75, ease: "power2.out", immediateRender: false }, tip(pt.tab2)), 19.75);
+      click(20.55, "#c-tab2");
+      tl.to("#c-tab1-on", { opacity: 0, duration: 0.15 }, 20.6);
+      tl.to("#c-tab2-on", { opacity: 1, duration: 0.15 }, 20.6);
+      tl.to("#c-tab2-l", { color: "#1f2329", duration: 0.15 }, 20.6);
+      swap("#c-L-idx", "#c-L-kan", 20.6);
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, camTo(950, 600, 1.24, 960, 440)), 20.75);
+      tl.to(".ks", { opacity: 1, y: 0, duration: 0.4, ease: "expo.out", stagger: 0.08 }, 20.9);
+      tl.to(".ka", { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 21.3);
+      tl.to(["#c-cr1", "#c-cr2"], { opacity: 1, y: 0, duration: 0.45, ease: "expo.out", stagger: 0.2 }, 21.45);
+      tl.fromTo(".warn", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out", stagger: 0.1 }, 21.6);
+      capIn("#c-cap7", 21.3, 24.4);
+
+      // open conflict inline, then resolve it via the edit action
+      tl.to(cur, Object.assign({ duration: 0.7, ease: "power2.inOut" }, tip(pt.cr1)), 22.7);
+      click(23.5, "#c-cr1");
+      tl.to("#c-cr1-hl", { opacity: 1, duration: 0.15 }, 23.55);
+      tl.fromTo("#c-det", { height: 0 }, { height: detH, duration: 0.55, ease: "power3.out", immediateRender: false }, 23.62);
+      tl.fromTo("#c-det .dgrid > *", { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.025, immediateRender: false }, 23.72);
+      capIn("#c-cap8", 24.6, 27.4);
+      tl.to(cur, Object.assign({ duration: 0.65, ease: "power2.inOut" }, tip(pt.edit)), 24.25);
+      click(24.95, "#c-edit");
+      tl.to("#c-edit", { backgroundColor: "#ffe9e2", color: "#e8453c", duration: 0.15 }, 25.0);
+      tl.set("#c-fp0", { opacity: 0 }, 25.02);
+      tl.fromTo("#c-fp-box", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 25.02);
+      tl.fromTo("#c-fp-t", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "steps(18)", immediateRender: false }, 25.08);
+      tl.to("#c-fp-box", { opacity: 0, duration: 0.2 }, 25.68);
+      tl.to("#c-edit", { backgroundColor: "#f3f4f7", color: "#4b5260", duration: 0.2 }, 25.68);
+      tl.set("#c-ft0", { opacity: 0 }, 25.7);
+      tl.fromTo("#c-ft1", { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: 0.25, ease: "expo.out" }, 25.7);
+      tl.set("#c-fb0", { opacity: 0 }, 25.78);
+      tl.fromTo("#c-fb1", { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: 0.25, ease: "expo.out" }, 25.78);
+      tl.set("#c-cr1-p", { opacity: 0 }, 25.82);
+      tl.fromTo("#c-cr1-d", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.25, ease: "expo.out" }, 25.82);
+      tl.set("#c-k-2", { opacity: 0 }, 25.9);
+      tl.fromTo("#c-k-1", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }, 25.9);
+      tl.to("#c-r-c1 .warn", { opacity: 0, duration: 0.25 }, 25.95);
+      tl.to("#c-cr1-hl", { opacity: 0, duration: 0.3 }, 26.2);
+
+      // pull back: the whole workspace
+      tl.to(cur, { x: 1980, y: 1100, duration: 0.6, ease: "power2.in" }, 26.0);
+      tl.to(cur, { opacity: 0, duration: 0.15 }, 26.65); // parked cursor would show once the camera pulls back
+      // to the overview by a short fade, not a camera move (moving/scaling text stutters); framing then stays static
+      tl.to(cam, { opacity: 0, duration: 0.25, ease: "power1.in" }, 26.6);
+      tl.set(cam, { x: 133.7, y: -14.4, scale: 0.86 }, 26.85);
+      tl.to(cam, { opacity: 1, duration: 0.35, ease: "power1.out" }, 26.86);
+      capIn("#c-cap9", 27.6, 30.6);
+
+      // exit: the window recedes
+      tl.to("#c-win", { scale: 0.62, x: -380, filter: "blur(6px)", opacity: 0, duration: 0.9, ease: "power3.in" }, 31.0);
+
+      // conversation hold: VikingBot asks for compile parameters before compiling starts
+      const CONV = 4.2;
+      // voiceover holds: [stage time, hold seconds]; everything at or after a hold point shifts later
+      const HOLDS = [[1.15, 1.75], [4.28, 0.35], [10.5, CONV], [15.2, 0.6], [27.6, 0.6], [30.55, 0.5]];
+      const W = (t) => HOLDS.reduce((a, h) => a + (t >= h[0] - 1e-6 ? h[1] : 0), t);
+      tl.getChildren(false, true, true).forEach((c) => c.startTime(W(c.startTime())));
+
+      // ---------- VikingBot conversation (final timeline seconds, authored after the hold remap) ----------
+      // send click lands at 11.85; compile starts at 16.3 (narration line 06 begins with it)
+      const SCR = Math.max(0, $("#c-chatin").offsetHeight - $("#c-chat").offsetHeight + 12);
+      tl.to(".chips", { opacity: 0, duration: 0.2 }, 11.95);
+      tl.to(cam, Object.assign({ duration: 0.8, ease: "power2.inOut" }, camTo(1643, 560, 1.38, 1600, 520)), 11.95);
+      tl.fromTo("#c-usrc", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 12.0);
+      tl.fromTo("#c-ubub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 12.08);
+      tl.to(cur, Object.assign({ duration: 0.8, ease: "power2.inOut" }, tip({ x: 1700, y: 900 })), 12.2);
+      tl.fromTo("#c-bwho", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 12.55);
+      tl.fromTo("#c-b1", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 12.7);
+      tl.fromTo("#c-b2", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 13.15);
+      tl.fromTo("#c-b3", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 13.55);
+      // form card arrives; chat scrolls up once (short, eased, whole pixels)
+      tl.to("#c-chatin", { y: -SCR, duration: 0.55, ease: "power3.inOut", snap: "y" }, 14.05);
+      tl.fromTo("#c-form", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 14.15);
+      const up = (p) => ({ x: p.x, y: p.y - SCR });
+      moveTo(up(pt.fsel), 14.35, 0.55);
+      click(14.95, "#c-fsel");
+      tl.fromTo("#c-fopts", { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" }, 15.0);
+      tl.to("#c-fo1", { backgroundColor: "#fff1ea", duration: 0.12 }, 15.35);
+      moveTo(up(pt.fo1), 15.1, 0.35);
+      click(15.5);
+      tl.to("#c-fopts", { opacity: 0, duration: 0.15 }, 15.58);
+      tl.set("#c-fv0", { opacity: 0 }, 15.6);
+      tl.fromTo("#c-fv1", { opacity: 0 }, { opacity: 1, duration: 0.18 }, 15.6);
+      moveTo(up(pt.fok), 15.65, 0.5);
+      click(16.2, "#c-fok");
+      tl.set("#c-fok0", { opacity: 0 }, 16.27);
+      tl.set("#c-fok1", { opacity: 1 }, 16.27);
+      tl.to("#c-fok", { backgroundColor: "#9aa0ab", duration: 0.2 }, 16.27);
+      tl.fromTo("#c-start", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "expo.out" }, 16.35);
+      tl.fromTo(".dotp", { scale: 0.4 }, { scale: 1, duration: 0.4, ease: "back.out(3)" }, 16.35);
+      tl.to(cur, { x: 1980, y: 1100, duration: 0.7, ease: "power2.in" }, 16.55);
+      capIn("#c-cap4", 16.4, 19.3);
+
+      window.__timelines["console"] = tl;
+    })();
+  </script>
+</template>
